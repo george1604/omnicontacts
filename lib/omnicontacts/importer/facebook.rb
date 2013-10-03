@@ -37,7 +37,7 @@ module OmniContacts
       end
 
       def fetch_current_user access_token
-        self_response = https_get(@contacts_host, @self_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture,relationship_status,significant_other'})
+        self_response = https_get(@contacts_host, @self_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture,relationship_status,significant_other,username'})
         self_response = JSON.parse(self_response) if self_response
         self_response
       end
@@ -80,7 +80,7 @@ module OmniContacts
 
       def create_contact_element contact_info
         # creating nil fields to keep the fields consistent across other networks
-        contact = {:id => nil, :first_name => nil, :last_name => nil, :name => nil, :email => nil, :gender => nil, :birthday => nil, :profile_picture=> nil, :relation => nil}
+        contact = {:id => nil, :first_name => nil, :last_name => nil, :name => nil, :email => nil, :gender => nil, :birthday => nil, :profile_picture=> nil, :relation => nil, :username => nil}
         contact[:id] = contact_info['id']
         contact[:first_name] = normalize_name(contact_info['first_name'])
         contact[:last_name] = normalize_name(contact_info['last_name'])
@@ -90,6 +90,7 @@ module OmniContacts
         contact[:birthday] = birthday(contact_info['birthday'])
         contact[:profile_picture] = contact_info['picture']['data']['url'] if contact_info['picture']
         contact[:relation] = contact_info['relationship']
+        contact[:username] = contact_info['username']
         contact
       end
 
